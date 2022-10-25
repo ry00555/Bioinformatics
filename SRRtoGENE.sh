@@ -24,13 +24,13 @@ i=$(cat $File)
 for i in $i
 
 do
-wget -O  $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i\&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
+wget -O  $i\.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i\&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
 done
 
 
 #export only the gene name
-grep -v study $i.txt
-awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
+#grep -v study $i.txt
+#awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
 
 #transfer files to RNAseq folder in RochelleLabDesktopData
 #scp -r /home/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
