@@ -8,8 +8,8 @@
 #SBATCH --output=/home/ry00555/Bioinformatics/log.%j			    # Location of standard output and error log files (replace cbergman with your myid)
 #SBATCH --mail-user=ry00555@uga.edu                    # Where to send mail (replace cbergman with your myid)
 #SBATCH --mail-type=ALL                  # Mail events (BEGIN, SUBMITTED, END, FAIL, ALL)
-#SBATCH --output=../homework1.%j.out
-#SBATCH --error=../homework1.%j.err
+#SBATCH --output=../SRRtoGENE.%j.out
+#SBATCH --error=../SRRtoGENE.%j.err
 
 #Set directory
 cd /home/ry00555/Bioinformatics/
