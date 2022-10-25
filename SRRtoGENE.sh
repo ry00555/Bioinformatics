@@ -1,0 +1,43 @@
+#!/bin/bash
+#SBATCH --job-name=SRRtoGENE	                        # Job name
+#SBATCH --partition=batch		                            # Partition (queue) name
+#SBATCH --ntasks=1			                                # Single task job
+#SBATCH --cpus-per-task=6		                            # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=40gb			                                # Total memory for job
+#SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
+#SBATCH --output=/home/ry00555/Bioinformatics/log.%j			    # Location of standard output and error log files (replace cbergman with your myid)
+#SBATCH --mail-user=ry00555@uga.edu                    # Where to send mail (replace cbergman with your myid)
+#SBATCH --mail-type=ALL                  # Mail events (BEGIN, SUBMITTED, END, FAIL, ALL)
+#SBATCH --output=../homework1.%j.out
+#SBATCH --error=../homework1.%j.err
+
+#Set directory
+cd /home/ry00555/Bioinformatics/
+#copy JGI All Count excel file from local machine
+scp JgiAllSampleCounts.txt ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
+
+#download metadata for an individual SRR sample
+for i in SRR* in JgiAllSampleCounts.txt
+
+do
+wget -O $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=$i&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
+done
+
+
+#export only the gene name
+grep -v study SRR*.txt
+awk '{print $NF}' SRR*.txt >> allSRRtoGENE.txt
+
+#transfer files to RNAseq folder in RochelleLabDesktopData
+scp -r /home/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
+
+
+#provided by Casey
+#for i in SRR8269612
+
+#do
+#wget -O $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=$i&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
+#done
+
+#grep -v study SRR*.txt
+#awk '{print $NF}' SRR*.txt >> allSRRtoGENE.txt
