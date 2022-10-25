@@ -14,22 +14,24 @@
 #Set directory
 cd /home/ry00555/Bioinformatics/
 #copy JGI All Count excel file from local machine
-scp JgiAllSampleCounts.txt ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
+scp JGIAllCountsSRRONLY_renamed.xlsx ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
 
+
+input='/home/ry00555/Bioinformatics/JGIAllCountsSRRONLY_renamed.xlsx'
 #download metadata for an individual SRR sample
-for i in SRR* in JgiAllSampleCounts.txt
+for i in {*_1..*_12}
 
 do
-wget -O $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=$i&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
+wget -O $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i\&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
 done
 
 
 #export only the gene name
 grep -v study SRR*.txt
-awk '{print $NF}' SRR*.txt >> allSRRtoGENE.txt
+awk '{print $NF}' SRR*.txt >> TESTallSRRtoGENE.txt
 
 #transfer files to RNAseq folder in RochelleLabDesktopData
-scp -r /home/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
+#scp -r /home/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
 
 
 #provided by Casey
