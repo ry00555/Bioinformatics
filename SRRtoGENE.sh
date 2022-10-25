@@ -14,15 +14,17 @@
 #Set directory
 cd /home/ry00555/Bioinformatics/
 #copy JGI All Count excel file from local machine
-scp JGIAllCountsSRRONLY_renamed.xlsx ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
+scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
 
 
-input='/home/ry00555/Bioinformatics/JGIAllCountsSRRONLY_renamed.xlsx'
+
 #download metadata for an individual SRR sample
-for i in {*_1..*_12}
+File='/home/ry00555/Bioinformatics/JGIAllCountsSRRONLY.txt'
+i=$(cat $File)
+for i in $i
 
 do
-wget -O $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i\&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
+wget -O  SRR*.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i\&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
 done
 
 
