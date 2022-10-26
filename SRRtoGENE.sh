@@ -5,14 +5,14 @@
 #SBATCH --cpus-per-task=6		                            # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=40gb			                                # Total memory for job
 #SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/home/ry00555/Bioinformatics/log.%j			    # Location of standard output and error log files (replace cbergman with your myid)
+#SBATCH --output=/scratch/ry00555/Bioinformatics/log.%j			    # Location of standard output and error log files (replace cbergman with your myid)
 #SBATCH --mail-user=ry00555@uga.edu                    # Where to send mail (replace cbergman with your myid)
 #SBATCH --mail-type=ALL                  # Mail events (BEGIN, SUBMITTED, END, FAIL, ALL)
 #SBATCH --output=../SRRtoGENE.%j.out
 #SBATCH --error=../SRRtoGENE.%j.err
 
 #Set directory
-cd /home/ry00555/Bioinformatics/
+cd /scratch/ry00555/Bioinformatics/
 #copy JGI All Count excel file from local machine
 scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
 
