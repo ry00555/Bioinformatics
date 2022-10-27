@@ -3,7 +3,7 @@
 
 #use strict;
 
-my "$GCA_000182925.2_NC12_genomic.fa";
+my $GCA_000182925.2_NC12_genomic.fa;
 
 if ($ARGV[0]) {
 	"$GCA_000182925.2_NC12_genomic.fa" = $ARGV[0];
