@@ -13,10 +13,10 @@ else {
 	die "!\n\n";
 }
 
-my "$Ncrassa_Len.fa.fai" = "$NC12_Genomic.fa;"
+my $Ncrassa_Len.fa.fai=$NC12_Genomic.fa;
 "$Ncrassa_Len.fa.fai" =~ s/.*\\//;
 "$Ncrassa_Len.fa.fai" =~ s/.*\///;
-"$Ncrassa_Len.fa.fai"="Ncrassa"."$Ncrassa_Len.fa.fai";
+"$Ncrassa_Len.fa.fai"="Len"."$Ncrassa_Len.fa.fai";
 open (FILE, "<$NC12_Genomic.fa") or die "Cannot open file!!!!: $!";
 open (OUT, ">$Ncrassa_Len.fa.fai") or die "Cannot open file!!!!: $!";
 
