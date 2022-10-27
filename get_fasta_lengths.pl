@@ -1,7 +1,7 @@
 #!/usr/bin/env perl -w
 #prints lengths of sequences from a multifasta file
 
-use strict;
+#use strict;
 
 my $GCA_000182925.2_NC12_genomic.fa;
 
