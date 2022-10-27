@@ -14,7 +14,7 @@
 #Set directory
 cd /scratch/ry00555/Bioinformatics/
 #copy JGI All Count excel file from local machine
-scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
+scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/scratch/ry00555/Bioinformatics
 
 
 
@@ -31,7 +31,7 @@ grep -v study $i.txt
 awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
 
 #transfer files to RNAseq folder in RochelleLabDesktopData
-#scp -r /home/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
+#scp -r /scratch/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
 
 
 #provided by Casey
