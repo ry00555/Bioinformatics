@@ -1,19 +1,19 @@
-!/usr/bin/env perl -w
+#!/usr/bin/env perl -w
 #prints lengths of sequences from a multifasta file
 
 use strict;
 
-my $Filename;
+my $GCA_000182925.2_NC12_genomic.fa;
 
 if ($ARGV[0]) {
-	$GCA_000182925.2_NC12_genomic.fa.fai = $ARGV[0];
+	$GCA_000182925.2_NC12_genomic.fa = $ARGV[0];
 }
 else {
 	print "Not enough arguments\n\n";
 	die "!\n\n";
 }
 
-my $NcrassaLen.fa.fai=$GCA_000182925.2_NC12_genomic.fa.fai;
+my $NcrassaLen.fa.fai=$GCA_000182925.2_NC12_genomic.fa;
 $NcrassaLen.fa.fai=~ s/.*\\//;
 $NcrassaLen.fa.fai=~ s/.*\///;
 $NcrassaLen.fa.fai="Ncrassa".$NcrassaLen.fa.fai;
