@@ -3,7 +3,7 @@
 
 use strict;
 
-my $\GCA_000182925.2_NC12_genomic.fa.fai;
+my $GCA_000182925.2_NC12_genomic.fa.fai;
 
 if ($ARGV[0]) {
 	$GCA_000182925.2_NC12_genomic.fa.fai = $ARGV[0];
@@ -14,8 +14,8 @@ else {
 }
 
 my $NcrassaWG.fa.fai=$GCA_000182925.2_NC12_genomic.fa.fai;
-$NcrassaLen.fa.fai =~ s/.*\\//;
-$NcrassaLen.fa.fai =~ s/.*\///;
+$NcrassaLen.fa.fai=~ s/.*\\//;
+$NcrassaLen.fa.fai=~ s/.*\///;
 $NcrassaLen.fa.fai="Ncrassa".$NcrassaLen.fa.fai;
 open (FILE, "<$GCA_000182925.2_NC12_genomic.fa.fai") or die "Cannot open file!!!!: $!";
 open (OUT, ">$NcrassaLen.fa.fai") or die "Cannot open file!!!!: $!";
