@@ -3,17 +3,17 @@
 
 #use strict;
 
-my $NC12_Genomic.fa;
+my "$NC12_Genomic.fa";
 
 if ($ARGV[0]) {
-	"$NC12_Genomic.fa" = $ARGV[0];
+	$NC12_Genomic.fa = $ARGV[0];
 }
 else {
 	print "Not enough arguments\n\n";
 	die "!\n\n";
 }
 
-my "$Ncrassa_Len.fa.fai"="$NC12_Genomic.fa";
+my "$Ncrassa_Len.fa.fai" = "$NC12_Genomic.fa";
 "$Ncrassa_Len.fa.fai" =~ s/.*\\//;
 "$Ncrassa_Len.fa.fai" =~ s/.*\///;
 "$Ncrassa_Len.fa.fai"="Ncrassa"."$Ncrassa_Len.fa.fai";
