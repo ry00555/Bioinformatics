@@ -1,0 +1,102 @@
+###For more options see: http://boevalab.com/FREEC/tutorial.html#CONFIG ###
+
+#ml Control-FREEC/11.6-foss-2020b-R-4.2.1
+#freec
+
+[general]
+
+##parameters chrLenFile and ploidy are required.
+#on local machine run the scp command
+#scp GCA_000182925.2_NC12_genomic.fna ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics
+#in Bioinformatics Folder convert .fna to .fa.fai
+#cp GCA_000182925.2_NC12_genomic.fna GCA_000182925.2_NC12_genomic.fa.fai
+
+chrLenFile = /home/ry00555/Bioinformatics/GCA_000182925.2_NC12_genomic.fa.fai
+
+ploidy = 1
+#use ploidy=2 if you caught your mold in the diploid phqse
+
+
+##Parameter "breakPointThreshold" specifies the maximal slope of the slope of residual sum of squares.
+##This should be a positive value. The closer it is to Zero, the more breakpoints will be called. Its recommended value is between 0.01 and 0.08.
+
+#TRY TO RUN FREEC WITH THE DEFAULT PARAMETERS FIRST. DECREASE/INCREASE THE THERESHOLD ONLY IF YOU ARE NOT HAPPY WITH THE PROPOSED NUMBER OF BREAKPOINT (FROM VISUAL INSPECTION OF THE OUTPUT)
+#breakPointThreshold = 0.6
+
+
+##Either coefficientOfVariation or window must be specified for whole genome sequencing data. Set window=0 for exome sequencing data.
+
+#HERE LET FREEC DETERMINE THE WINDOW ITSELF BASED ON THE DEFAULT VALUE OF THE COEFFICIENT OF VARIATION (0.06 I GUESS)
+#coefficientOfVariation = 0.01
+#window = 50000
+#step=10000
+
+##Either chrFiles or GCcontentProfile must be specified too if no control dataset is available.
+##If you provide a path to chromosome files, Control-FREEC will look for the following fasta files in your directory (in this order):
+##1, 1.fa, 1.fasta, chr1.fa, chr1.fasta; 2, 2.fa, etc.
+## Please ensure that you don't have other files but sequences having the listed names in this directory.
+chrFiles = /home/ry00555/Bioinformatics/GCA_000182925.2_NC12_genomic.fa.fai/
+#GCcontentProfile = /home/ry00555/Bioinformatics/GCA_000182925.2_NC12_genomic.fa.fai/GC_profile_50000.cnp
+
+#THIS MAY BE VERY IMPORTANT FOR YOU TO SET CORRECTLY. HOW GC-RICH IS THE GENOME? YOU CAN RUN FREEC ONCE AND THEN SIMPLY LOOK AT THE DISTRIBUTION OF VALUES IN THE GC_profile_xxx.cnp WHICH WILL BE CREATED
+##if you are working with something non-human, we may need to modify these parameters:
+#minExpectedGC = 0.35
+#maxExpectedGC = 0.55
+
+
+#readCountThreshold=10
+
+#numberOfProcesses = 4
+#outputDir = test
+#contaminationAdjustment = TRUE
+#contamination = 0.4
+#minMappabilityPerWindow = 0.95
+
+
+##If the parameter gemMappabilityFile is not specified, then the fraction of non-N nucleotides per window is used as Mappability.
+
+#gemMappabilityFile = /home/ry00555/Bioinformatics/GEM_mappability/out76.gem
+
+
+#breakPointType = 4
+#forceGCcontentNormalization = 0
+#sex=XY
+
+##set BedGraphOutput=TRUE if you want to create a BedGraph track for visualization in the UCSC genome browser:
+#BedGraphOutput=TRUE
+
+[sample]
+
+mateFile = /path/sample.bam
+#mateCopyNumberFile = test/sample.cpn
+inputFormat = BAM
+mateOrientation = RF
+
+##use "mateOrientation=0" for sorted .SAM and .BAM
+
+[control]
+
+#mateFile = /home/ry00555/Bioinformatics/control.pileup.gz
+#mateCopyNumberFile = /home/ry00555/Bioinformatics/control.cpn
+#inputFormat = pileup
+
+
+#mateOrientation = RF
+
+#[BAF]
+
+##use the following options to calculate B allele frequency profiles and genotype status. This option can only be used if "inputFormat=pileup"
+
+#SNPfile =
+#minimalCoveragePerPosition = 5
+
+##use "minimalQualityPerPosition" and "shiftInQuality" to consider only high quality position in calculation of allelic frequencies (this option significantly slows down reading of .pileup)
+
+#minimalQualityPerPosition = 5
+#shiftInQuality = 33
+
+[target]
+
+##use a tab-delimited .BED file to specify capture regions (control dataset is needed to use this option):
+
+#captureRegions = /home/ry00555/Bioinformatics/
