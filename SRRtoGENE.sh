@@ -14,7 +14,7 @@
 #Set directory
 cd /scratch/ry00555/Bioinformatics/
 #copy JGI All Count excel file from local machine
-scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/scratch/ry00555/Bioinformatics
+#scp JGIAllCountsSRRONLY.txt ry00555@xfer.gacrc.uga.edu:/scratch/ry00555/Bioinformatics
 
 
 
