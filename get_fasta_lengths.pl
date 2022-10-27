@@ -13,7 +13,7 @@ else {
 	die "!\n\n";
 }
 
-my $Ncrassa_Len.fa.fai=$NC12_Genomic.fa;
+my "$Ncrassa_Len.fa.fai"="$NC12_Genomic.fa";
 "$Ncrassa_Len.fa.fai" =~ s/.*\\//;
 "$Ncrassa_Len.fa.fai" =~ s/.*\///;
 "$Ncrassa_Len.fa.fai"="Len"."$Ncrassa_Len.fa.fai";
