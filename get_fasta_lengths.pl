@@ -17,8 +17,8 @@ my "$Ncrassa_Len.fa.fai"="$NC12Genomic.fa";
 "$Ncrassa_Len.fa.fai" =~ s/.*\\//;
 "$Ncrassa_Len.fa.fai" =~ s/.*\///;
 "$Ncrassa_Len.fa.fai"="Len"."$Ncrassa_Len.fa.fai";
-open (FILE, "<$NC12Genomic") or die "Cannot open file!!!!: $!";
-open (OUT, ">$Ncrassa_Len") or die "Cannot open file!!!!: $!";
+open (FILE, "<$NC12Genomic.fa") or die "Cannot open file!!!!: $!";
+open (OUT, ">$Ncrassa_Len.fa.fai") or die "Cannot open file!!!!: $!";
 
 $_ = <FILE>;
 if (/>(.*)/) {
