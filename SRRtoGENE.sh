@@ -16,15 +16,14 @@ cd /scratch/ry00555/Bioinformatics
 
 #download metadata for an individual SRR sample
 File='/scratch/ry00555/Bioinformatics/JGIAllCountsSRRONLY.txt'
-for i in $(cat File)
+for i in $(cat $File)
 do
 wget -O  $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
 done
 
 
 #export only the gene name
-grep -v study $i.txt
-awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
+grep -v study $i.txt | awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
 
 #transfer files to RNAseq folder in RochelleLabDesktopData
 #scp -r /scratch/ry00555/Bioinformatics/allSRRtoGENE.txt  $HOME/Desktop/RochelleLabDesktopData/RNAseq
