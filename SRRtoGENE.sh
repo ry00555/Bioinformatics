@@ -19,8 +19,9 @@ File='/scratch/ry00555/Bioinformatics/JGIAllCountsSRRONLY.txt'
 for i in $(cat $File)
 do
 wget -O  $i.txt "https://www.ebi.ac.uk/ena/portal/api/filereport?accession=SRR$i&result=read_run&fields=study_accession,sample_accession,secondary_sample_accession,experiment_accession,run_accession,tax_id,scientific_name,fastq_ftp,submitted_ftp,sra_ftp,sample_alias,sample_title&format=tsv&download=true&limit=0"
-grep -v study $i.txt
-awk '{print $NF}' $i.txt >> TESTallSRRtoGENE.txt
+#grep -v study $i.txt - this would remove any line that has the word study - not robust
+#separate tabs by comlumn NR - take only the second row print NF only the last column
+awk -F'\t' 'NR == 2 {print $NF}' $i.txt >> TESTallSRRtoGENE.txt
 done
 
 
