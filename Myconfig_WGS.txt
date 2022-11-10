@@ -5,14 +5,14 @@
 
 ##parameters chrLenFile and ploidy are required.
 
-chrLenFile = test/hg19.fa.fai
-ploidy = 2
+chrLenFile = /Users/ry00555/Desktop/RochelleLabDesktopData/Bioinformatics/N crassa genome files/GCA_000182925.2_NC12_genomic.fna.fai
+ploidy = 1
 
 
 ##Parameter "breakPointThreshold" specifies the maximal slope of the slope of residual sum of squares.
 ##This should be a positive value. The closer it is to Zero, the more breakpoints will be called. Its recommended value is between 0.01 and 0.08.
 
-breakPointThreshold = .8
+breakPointThreshold = .08
 
 
 ##Either coefficientOfVariation or window must be specified for whole genome sequencing data. Set window=0 for exome sequencing data.
@@ -25,19 +25,19 @@ window = 50000
 ##If you provide a path to chromosome files, Control-FREEC will look for the following fasta files in your directory (in this order):
 ##1, 1.fa, 1.fasta, chr1.fa, chr1.fasta; 2, 2.fa, etc.
 ## Please ensure that you don't have other files but sequences having the listed names in this directory.
-chrFiles = path/hg19/
-#GCcontentProfile = test/GC_profile_50kb.cnp
+chrFiles = /Users/ry00555/Desktop/Neurospora Genome/Chromsomes
+#GCcontentProfile = 
 
 
 ##if you are working with something non-human, we may need to modify these parameters:
-#minExpectedGC = 0.35
-#maxExpectedGC = 0.55
+minExpectedGC = 0.36
+maxExpectedGC = 0.485
 
 
 #readCountThreshold=10
 
 #numberOfProcesses = 4
-#outputDir = test
+#outputDir = /home/ry00555/ControlFREECtest
 #contaminationAdjustment = TRUE
 #contamination = 0.4
 #minMappabilityPerWindow = 0.95
@@ -57,10 +57,10 @@ chrFiles = path/hg19/
 
 [sample]
 
-mateFile = /path/sample.bam
+mateFile = /Users/ry00555/Desktop/RochelleLabDesktopData/IGV /mus-30xmei-3 anaylsis IGV/mus30Samples/109_64_Genomic_S471_genomic_rep1_S40_R1_001_val_1.fq.gz.bam
 #mateCopyNumberFile = test/sample.cpn
 inputFormat = BAM
-mateOrientation = RF
+mateOrientation = 0
 
 ##use "mateOrientation=0" for sorted .SAM and .BAM
 
