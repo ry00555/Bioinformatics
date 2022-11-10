@@ -12,7 +12,7 @@ ploidy = 1
 ##Parameter "breakPointThreshold" specifies the maximal slope of the slope of residual sum of squares.
 ##This should be a positive value. The closer it is to Zero, the more breakpoints will be called. Its recommended value is between 0.01 and 0.08.
 
-breakPointThreshold = .08
+breakPointThreshold = .8
 
 
 ##Either coefficientOfVariation or window must be specified for whole genome sequencing data. Set window=0 for exome sequencing data.
@@ -26,12 +26,12 @@ window = 50000
 ##1, 1.fa, 1.fasta, chr1.fa, chr1.fasta; 2, 2.fa, etc.
 ## Please ensure that you don't have other files but sequences having the listed names in this directory.
 chrFiles = /Users/ry00555/Desktop/Neurospora Genome/Chromsomes
-#GCcontentProfile = 
+#GCcontentProfile =
 
 
 ##if you are working with something non-human, we may need to modify these parameters:
-minExpectedGC = 0.36
-maxExpectedGC = 0.485
+#minExpectedGC = 0.36
+#maxExpectedGC = 0.485
 
 
 #readCountThreshold=10
