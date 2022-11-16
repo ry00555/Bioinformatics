@@ -11,7 +11,7 @@
 
 cd $SLURM_SUBMIT_DIR
 ml GATK/4.2.5.0-GCCcore-8.3.0-Java-1.8.lua
-java -jar $EBROOTGATK/GenomeAnalysisTK.jar [options]
+java -jar $EBROOTGATK/GenomeAnalysisTK.jar -h
 
 
 gatk CollectReadCounts \
