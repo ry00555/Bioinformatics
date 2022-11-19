@@ -91,6 +91,6 @@ gatk PlotDenoisedCopyRatios \
                 --sequence-dictionary GCF_000182925.2.dict \
                 --output-prefix Run109CNV/109_ \
                 -O Run109CNV
-
+module load R/4.2.1-foss-2020b
 source activate R
-R --no-save < /home/ry00555/GENE8940/homework5.r
+R --no-save < /home/ry00555/Bioinformatics/MyCNVPlottingLibrary.r
