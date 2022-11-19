@@ -7,27 +7,27 @@ library(optparse)
 library(data.table)
 
 option_list = list(
-    make_option(c("--109_58"), dest="109_58", action="store"),
+    make_option(c("--sample_name"), dest="109_58", action="store"),
     make_option(c("--CopyRatios/109_58.standardizedCR.tsv"), dest="CopyRatios/109_58.standardizedCR.tsv", action="store"),
     make_option(c("--CopyRatios/109_58.denoisedCR.tsv), dest="CopyRatios/109_58.denoisedCR.tsv", action="store"),
     make_option(c("--GCF_000182925.2.dict"[,2]"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
     make_option(c("--GCF_000182925.2.dict"[,3]"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
     make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
     make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
-    make_option(c("--Run109CNV"), dest="Run109CNV", action="store"),
-    make_option(c("--109_"), dest="109_", action="store"))
+    make_option(c("--output_dir"), dest="/Users/rochelleyap/Desktop/LewisLab/Images", action="store"),
+    make_option(c("--output_prefix"), dest="109_", action="store"))
 
 opt = parse_args(OptionParser(option_list=option_list))
 
-109_58 = opt[["109_58"]]
-CopyRatios/109_58.standardizedCR.tsv = opt[["CopyRatios/109_58.standardizedCR.tsv"]]
-CopyRatios/109_58.denoisedCR.tsv = opt[["CopyRatios/109_58.denoisedCR.tsv"]]
+sample_name = opt[["109_58"]]
+standardized_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv"]]
+denoised_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv"]]
 contig_names = opt[["GCF_000182925.2.dict"[,2]"]]
 contig_lengths = opt[["GCF_000182925.2.dict"[,3]"]]
 maximum_copy_ratio = opt[["maximum_copy_ratio"]]
 point_size_copy_ratio = opt[["point_size_copy_ratio"]]
-Run109CNV = opt[["Run109CNV"]]
-109_ = opt[["109_"]]
+output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
+output_prefix = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
 if (!all(file.exists(c(CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv)))) {
@@ -44,9 +44,9 @@ CalculateMedianAbsoluteDeviation = function(dat) {
 }
 
 #plotting is extracted to a function for debugging purposes
-WriteDenoisingPlots = function(109_58, CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
-    standardized_copy_ratios_df = ReadTSV(CopyRatios/109_58.standardizedCR.tsv)
-    denoised_copy_ratios_df = ReadTSV(CopyRatios/109_58.denoisedCR.tsv)
+WriteDenoisingPlots = function(109_58, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
+    standardized_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv)
+    denoised_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)
 
     #transform to linear copy ratio
     standardized_copy_ratios_df[["COPY_RATIO"]] = 2^standardized_copy_ratios_df[["LOG2_COPY_RATIO"]]
@@ -59,17 +59,17 @@ WriteDenoisingPlots = function(109_58, CopyRatios/109_58.standardizedCR.tsv, Cop
     #write the MAD files
     standardizedMAD = CalculateMedianAbsoluteDeviation(standardized_copy_ratios_df[["COPY_RATIO"]])
     denoisedMAD = CalculateMedianAbsoluteDeviation(denoised_copy_ratios_df[["COPY_RATIO"]])
-    write.table(round(standardizedMAD, 3), file.path(Run109CNV, paste(Run109_, ".standardizedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(denoisedMAD, 3), file.path(Run109CNV, paste(Run109_, ".denoisedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(standardizedMAD - denoisedMAD, 3), file.path(Run109CNV, paste(Run109_, ".deltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round((standardizedMAD - denoisedMAD) / standardizedMAD, 3), file.path(Run109CNV, paste(Run109_, ".scaledDeltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(standardizedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".standardizedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(denoisedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".denoisedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(standardizedMAD - denoisedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".deltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round((standardizedMAD - denoisedMAD) / standardizedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".scaledDeltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
 
     #plot standardized and denoised copy ratio on top of each other
     pre_color_blue = "#3B5DFF"
     post_color_green = "#4FC601"
 
     #plot up to maximum_copy_ratio (or full range, if maximum_copy_ratio = Infinity)
-    denoising_plot_file = file.path(Run109CNV, paste(Run109_, ".denoised.png", sep=""))
+    denoising_plot_file = file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".denoised.png", sep=""))
     png(denoising_plot_file, 12, 7, units="in", type="cairo", res=300, bg="white")
     par(mfrow=c(2, 1), cex=0.75, las=1)
     maximum_standardized_copy_ratio = if(is.finite(maximum_copy_ratio)) maximum_copy_ratio else 1.05 * max(standardized_copy_ratios_df[["COPY_RATIO"]])
