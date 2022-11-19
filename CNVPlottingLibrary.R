@@ -8,10 +8,10 @@ library(data.table)
 
 option_list = list(
     make_option(c("--sample_name"), dest="109_58", action="store"),
-    make_option(c("--CopyRatios/109_58.standardizedCR.tsv"), dest="CopyRatios/109_58.standardizedCR.tsv", action="store"),
-    make_option(c("--CopyRatios/109_58.denoisedCR.tsv), dest="CopyRatios/109_58.denoisedCR.tsv", action="store"),
-    make_option(c("--GCF_000182925.2.dict"[,2]"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--GCF_000182925.2.dict"[,3]"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--standardized_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv", action="store"),
+    make_option(c("--denoised_copy_ratios_file), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv", action="store"),
+    make_option(c("--contig_names"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--contig_lengths"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
     make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
     make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
     make_option(c("--output_dir"), dest="/Users/rochelleyap/Desktop/LewisLab/Images", action="store"),
@@ -30,7 +30,7 @@ output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
 output_prefix = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
-if (!all(file.exists(c(CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv)))) {
+if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)))) {
     quit(save="no", status=1, runLast=FALSE)
 }
 
@@ -44,7 +44,7 @@ CalculateMedianAbsoluteDeviation = function(dat) {
 }
 
 #plotting is extracted to a function for debugging purposes
-WriteDenoisingPlots = function(109_58, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
+WriteDenoisingPlots = function(109_58, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
     standardized_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv)
     denoised_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)
 
