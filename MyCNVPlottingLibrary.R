@@ -1,37 +1,38 @@
 #NOTE: the Java wrapper for this script first sources CNVPlottingLibrary.R
 options(error = quote({dump.frames(dumpto = "plotting_dump", to.file = TRUE); q(status = 1)}))    # Useful for debugging
-
-install.packages(optparse)
-install.packages(data.table)
+if (!require("BiocManager", quietly = TRUE))
+install.packages("BiocManager")
+BiocManager::install(version = "3.16")
+install.packages("optparse")
+install.packages("data.table")
 library(optparse)
 library(data.table)
 
-option_list = list(
-    make_option(c("--109_58"), dest="109_58", action="store"),
-    make_option(c("--CopyRatios/109_58.standardizedCR.tsv"), dest="CopyRatios/109_58.standardizedCR.tsv", action="store"),
-    make_option(c("--CopyRatios/109_58.denoisedCR.tsv), dest="CopyRatios/109_58.denoisedCR.tsv", action="store"),
-    make_option(c("--GCF_000182925.2.dict"[,2]"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--GCF_000182925.2.dict"[,3]"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
-    make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
-    make_option(c("--Run109CNV"), dest="Run109CNV", action="store"),
-    make_option(c("--109_"), dest="109_", action="store"))
+option_list = list(make_option(c("--sample_name"), dest="109_58", action="store"), 
+                   make_option(c("--standardized_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv", action="store"), 
+                   make_option(c("--denoised_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv", action="store"),
+                   make_option(c("--contig_names"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict", action="store"),
+                   make_option(c("--contig_lengths"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict", action="store"),
+                   make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
+                   make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
+                   make_option(c("--output_dir"), dest="/Users/rochelleyap/Desktop/LewisLab/Images", action="store"),
+                   make_option(c("--output_prefix"), dest="109_", action="store"))
 
 opt = parse_args(OptionParser(option_list=option_list))
 
-109_58 = opt[["109_58"]]
-CopyRatios/109_58.standardizedCR.tsv = opt[["CopyRatios/109_58.standardizedCR.tsv"]]
-CopyRatios/109_58.denoisedCR.tsv = opt[["CopyRatios/109_58.denoisedCR.tsv"]]
-contig_names = opt[["GCF_000182925.2.dict"[,2]"]]
-contig_lengths = opt[["GCF_000182925.2.dict"[,3]"]]
+sample_name = opt[["109_58"]]
+standardized_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv"]]
+denoised_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv"]]
+contig_names = opt[["GCF_000182925.2.dict"]]
+contig_lengths = opt[["GCF_000182925.2.dict"]]
 maximum_copy_ratio = opt[["maximum_copy_ratio"]]
 point_size_copy_ratio = opt[["point_size_copy_ratio"]]
-Run109CNV = opt[["Run109CNV"]]
-109_ = opt[["109_"]]
+output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
+output_prefix = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
-if (!all(file.exists(c(CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv)))) {
-    quit(save="no", status=1, runLast=FALSE)
+if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)))) {
+  quit(save="no", status=1, runLast=FALSE)
 }
 
 GCF_000182925.2.dict"[,2] = as.list(strsplit(contig_names_string, "CONTIG_DELIMITER")[[1]])

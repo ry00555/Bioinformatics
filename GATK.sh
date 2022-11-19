@@ -86,10 +86,10 @@ mkdir CopyRatios
           --denoised-copy-ratios CopyRatios/109_58.denoisedCR.tsv
 
 gatk PlotDenoisedCopyRatios \
-                --standardized-copy-ratios CopyRatios/109_58.standardizedCR.tsv \
-                --denoised-copy-ratios CopyRatios/109_58.denoisedCR.tsv \
-                --sequence-dictionary GCF_000182925.2.dict \
-                --output-prefix Run109CNV/109_ \
+                --standardized-copy-ratios CrassaGenome/CopyRatios/109_58.standardizedCR.tsv \
+                --denoised-copy-ratios CrassaGenome/CopyRatios/109_58.denoisedCR.tsv \
+                --sequence-dictionary CrassaGenome/GCF_000182925.2.dict \
+                --output-prefix CrassaGenome/Run109CNV/109_ \
                 -O Run109CNV
 
                 [November 18, 2022 at 10:54:56 PM EST] org.broadinstitute.hellbender.tools.copynumber.plotting.PlotDenoisedCopyRatios done. Elapsed time: 0.04 minutes.
@@ -102,4 +102,4 @@ gatk PlotDenoisedCopyRatios \
                   Error in getopt(spec = spec, opt = args) : long flag "args" is invalid
                 Calls: source ... eval -> parse_args -> parse_options -> getopt_options
 module load R/4.2.1-foss-2020b
-R CMD BATCH MyCNVPlottingLibrary.R
+R CMD BATCH CNVPlottingLibrary.R
