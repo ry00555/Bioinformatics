@@ -7,36 +7,36 @@ library(optparse)
 library(data.table)
 
 option_list = list(
-    make_option(c("--sample_name"), dest="sample_name", action="store"),
-    make_option(c("--standardized_copy_ratios_file"), dest="standardized_copy_ratios_file", action="store"),
-    make_option(c("--denoised_copy_ratios_file"), dest="denoised_copy_ratios_file", action="store"),
-    make_option(c("--contig_names"), dest="contig_names", action="store"),      #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--contig_lengths"), dest="contig_lengths", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="double"),
+    make_option(c("--109_58"), dest="109_58", action="store"),
+    make_option(c("--CopyRatios/109_58.standardizedCR.tsv"), dest="CopyRatios/109_58.standardizedCR.tsv", action="store"),
+    make_option(c("--CopyRatios/109_58.denoisedCR.tsv), dest="CopyRatios/109_58.denoisedCR.tsv", action="store"),
+    make_option(c("--GCF_000182925.2.dict"[,2]"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--GCF_000182925.2.dict"[,3]"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
     make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
-    make_option(c("--output_dir"), dest="output_dir", action="store"),
-    make_option(c("--output_prefix"), dest="output_prefix", action="store"))
+    make_option(c("--Run109CNV"), dest="Run109CNV", action="store"),
+    make_option(c("--109_"), dest="109_", action="store"))
 
 opt = parse_args(OptionParser(option_list=option_list))
 
-sample_name = opt[["sample_name"]]
-standardized_copy_ratios_file = opt[["standardized_copy_ratios_file"]]
-denoised_copy_ratios_file = opt[["denoised_copy_ratios_file"]]
-contig_names_string = opt[["contig_names"]]
-contig_lengths_string = opt[["contig_lengths"]]
+109_58 = opt[["109_58"]]
+CopyRatios/109_58.standardizedCR.tsv = opt[["CopyRatios/109_58.standardizedCR.tsv"]]
+CopyRatios/109_58.denoisedCR.tsv = opt[["CopyRatios/109_58.denoisedCR.tsv"]]
+contig_names = opt[["GCF_000182925.2.dict"[,2]"]]
+contig_lengths = opt[["GCF_000182925.2.dict"[,3]"]]
 maximum_copy_ratio = opt[["maximum_copy_ratio"]]
 point_size_copy_ratio = opt[["point_size_copy_ratio"]]
-output_dir = opt[["output_dir"]]
-output_prefix = opt[["output_prefix"]]
+Run109CNV = opt[["Run109CNV"]]
+109_ = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
-if (!all(file.exists(c(standardized_copy_ratios_file, denoised_copy_ratios_file)))) {
+if (!all(file.exists(c(CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv)))) {
     quit(save="no", status=1, runLast=FALSE)
 }
 
-contig_names = as.list(strsplit(contig_names_string, "CONTIG_DELIMITER")[[1]])
-contig_lengths = as.list(strsplit(contig_lengths_string, "CONTIG_DELIMITER")[[1]])
-contig_ends = cumsum(contig_lengths)
+GCF_000182925.2.dict"[,2] = as.list(strsplit(contig_names_string, "CONTIG_DELIMITER")[[1]])
+GCF_000182925.2.dict"[,3] = as.list(strsplit(contig_lengths_string, "CONTIG_DELIMITER")[[1]])
+contig_ends = cumsum(GCF_000182925.2.dict"[,3])
 contig_starts = c(0, head(contig_ends, -1))
 
 CalculateMedianAbsoluteDeviation = function(dat) {
@@ -44,9 +44,9 @@ CalculateMedianAbsoluteDeviation = function(dat) {
 }
 
 #plotting is extracted to a function for debugging purposes
-WriteDenoisingPlots = function(sample_name, standardized_copy_ratios_file, denoised_copy_ratios_file, contig_names, output_dir, output_prefix) {
-    standardized_copy_ratios_df = ReadTSV(standardized_copy_ratios_file)
-    denoised_copy_ratios_df = ReadTSV(denoised_copy_ratios_file)
+WriteDenoisingPlots = function(109_58, CopyRatios/109_58.standardizedCR.tsv, CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
+    standardized_copy_ratios_df = ReadTSV(CopyRatios/109_58.standardizedCR.tsv)
+    denoised_copy_ratios_df = ReadTSV(CopyRatios/109_58.denoisedCR.tsv)
 
     #transform to linear copy ratio
     standardized_copy_ratios_df[["COPY_RATIO"]] = 2^standardized_copy_ratios_df[["LOG2_COPY_RATIO"]]
@@ -59,24 +59,24 @@ WriteDenoisingPlots = function(sample_name, standardized_copy_ratios_file, denoi
     #write the MAD files
     standardizedMAD = CalculateMedianAbsoluteDeviation(standardized_copy_ratios_df[["COPY_RATIO"]])
     denoisedMAD = CalculateMedianAbsoluteDeviation(denoised_copy_ratios_df[["COPY_RATIO"]])
-    write.table(round(standardizedMAD, 3), file.path(output_dir, paste(output_prefix, ".standardizedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(denoisedMAD, 3), file.path(output_dir, paste(output_prefix, ".denoisedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(standardizedMAD - denoisedMAD, 3), file.path(output_dir, paste(output_prefix, ".deltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round((standardizedMAD - denoisedMAD) / standardizedMAD, 3), file.path(output_dir, paste(output_prefix, ".scaledDeltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(standardizedMAD, 3), file.path(Run109CNV, paste(Run109_, ".standardizedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(denoisedMAD, 3), file.path(Run109CNV, paste(Run109_, ".denoisedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round(standardizedMAD - denoisedMAD, 3), file.path(Run109CNV, paste(Run109_, ".deltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
+    write.table(round((standardizedMAD - denoisedMAD) / standardizedMAD, 3), file.path(Run109CNV, paste(Run109_, ".scaledDeltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
 
     #plot standardized and denoised copy ratio on top of each other
     pre_color_blue = "#3B5DFF"
     post_color_green = "#4FC601"
 
     #plot up to maximum_copy_ratio (or full range, if maximum_copy_ratio = Infinity)
-    denoising_plot_file = file.path(output_dir, paste(output_prefix, ".denoised.png", sep=""))
+    denoising_plot_file = file.path(Run109CNV, paste(Run109_, ".denoised.png", sep=""))
     png(denoising_plot_file, 12, 7, units="in", type="cairo", res=300, bg="white")
     par(mfrow=c(2, 1), cex=0.75, las=1)
     maximum_standardized_copy_ratio = if(is.finite(maximum_copy_ratio)) maximum_copy_ratio else 1.05 * max(standardized_copy_ratios_df[["COPY_RATIO"]])
-    SetUpPlot(sample_name, "standardized copy ratio", 0, maximum_standardized_copy_ratio, paste("median absolute deviation = ", round(standardizedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, FALSE)
+    SetUpPlot(109_58, "standardized copy ratio", 0, maximum_standardized_copy_ratio, paste("median absolute deviation = ", round(standardizedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, FALSE)
     PlotCopyRatios(standardized_copy_ratios_df, pre_color_blue, contig_names, contig_starts, point_size_copy_ratio)
     maximum_denoised_copy_ratio = if(is.finite(maximum_copy_ratio)) maximum_copy_ratio else 1.05 * max(denoised_copy_ratios_df[["COPY_RATIO"]])
-    SetUpPlot(sample_name, "denoised copy ratio", 0, maximum_denoised_copy_ratio, paste("median absolute deviation = ", round(denoisedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, TRUE)
+    SetUpPlot(109_58, "denoised copy ratio", 0, maximum_denoised_copy_ratio, paste("median absolute deviation = ", round(denoisedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, TRUE)
     PlotCopyRatios(denoised_copy_ratios_df, post_color_green, contig_names, contig_starts, point_size_copy_ratio)
     dev.off()
 
@@ -86,46 +86,4 @@ WriteDenoisingPlots = function(sample_name, standardized_copy_ratios_file, denoi
     }
 }
 
-WriteDenoisingPlots(sample_name, standardized_copy_ratios_file, denoised_copy_ratios_file, contig_names, output_dir, output_prefix)
-
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-## Plot denoised and standardized copy ratios
-## See: https://software.broadinstitute.org/gatk/documentation/article?id=11682
-## NB need to optimize minimum contig length parameter for b37
-## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ## ##
-
-rule plotcr:
-    input:
-        standardized = "results/cnv/mergedenoisedreadcounts/{aliquot_barcode}.standardizedCR.tsv",
-        denoised = "results/cnv/mergedenoisedreadcounts/{aliquot_barcode}.denoisedCR.tsv"
-    output:
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.denoised.png",
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.denoisedLimit4.png",
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.standardizedMAD.txt",
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.denoisedMAD.txt",
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.deltaMAD.txt",
-        "results/cnv/plotcr/{aliquot_barcode}/{aliquot_barcode}.scaledDeltaMAD.txt"
-    params:
-        mem = CLUSTER_META["plotcr"]["mem"],
-        outputdir = "results/cnv/plotcr/{aliquot_barcode}",
-        outputprefix = "{aliquot_barcode}"
-    threads:
-        CLUSTER_META["plotcr"]["ppn"]
-    log:
-        "logs/cnv/plotcr/{aliquot_barcode}.log"
-    conda:
-        "../envs/gatk4.yaml"
-    benchmark:
-        "benchmarks/cnv/plotcr/{aliquot_barcode}.txt"
-    message:
-        "Plot denoised and standardized read counts\n"
-        "Aliquot: {wildcards.aliquot_barcode}"
-    shell:
-        "gatk --java-options -Xmx{params.mem}g PlotDenoisedCopyRatios \
-            --standardized-copy-ratios {input.standardized} \
-            --denoised-copy-ratios {input.denoised} \
-            --sequence-dictionary {config[reference_dict]} \
-            --minimum-contig-length {config[cnv][min_contig_len]} \
-            --output {params.outputdir} \
-            --output-prefix {params.outputprefix} \
-            > {log} 2>&1"
+#WriteDenoisingPlots(sample_name, standardized_copy_ratios_file, denoised_copy_ratios_file, contig_names, output_dir, output_prefix)
