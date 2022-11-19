@@ -10,8 +10,8 @@ option_list = list(
     make_option(c("--sample_name"), dest="109_58", action="store"),
     make_option(c("--standardized_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv", action="store"),
     make_option(c("--denoised_copy_ratios_file), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv", action="store"),
-    make_option(c("--contig_names"), dest="GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--contig_lengths"), dest="GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--contig_names"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
+    make_option(c("--contig_lengths"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
     make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
     make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
     make_option(c("--output_dir"), dest="/Users/rochelleyap/Desktop/LewisLab/Images", action="store"),
@@ -22,8 +22,8 @@ opt = parse_args(OptionParser(option_list=option_list))
 sample_name = opt[["109_58"]]
 standardized_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv"]]
 denoised_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv"]]
-contig_names = opt[["GCF_000182925.2.dict"[,2]"]]
-contig_lengths = opt[["GCF_000182925.2.dict"[,3]"]]
+contig_names = opt[["/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,2]"]]
+contig_lengths = opt[["/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,3]"]]
 maximum_copy_ratio = opt[["maximum_copy_ratio"]]
 point_size_copy_ratio = opt[["point_size_copy_ratio"]]
 output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
