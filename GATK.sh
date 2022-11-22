@@ -20,6 +20,7 @@ module load BEDTools/2.29.2-GCC-8.3.0
 module load SAMtools/1.10-GCC-8.3.0
 module load BEDOPS/2.4.39-foss-2019b
 ml Bowtie2/2.4.1-GCC-8.3.0
+ml R/3.6.2-foss-2019b
 #Converts the GFF file to BED format
 samtools faidx GCF_000182925.2.fasta
 bowtie2-build GCF_000182925.2.fasta reference
@@ -89,17 +90,8 @@ gatk PlotDenoisedCopyRatios \
                 --standardized-copy-ratios CrassaGenome/CopyRatios/109_58.standardizedCR.tsv \
                 --denoised-copy-ratios CrassaGenome/CopyRatios/109_58.denoisedCR.tsv \
                 --sequence-dictionary CrassaGenome/GCF_000182925.2.dict \
-                --output-prefix CrassaGenome/Run109CNV/109_ \
-                -O Run109CNV
+                --output-prefix Run109CNV \
+                --output CrassaGenome
 
-                [November 18, 2022 at 10:54:56 PM EST] org.broadinstitute.hellbender.tools.copynumber.plotting.PlotDenoisedCopyRatios done. Elapsed time: 0.04 minutes.
-                Runtime.totalMemory()=268435456
-                org.broadinstitute.hellbender.utils.R.RScriptExecutorException:
-                Rscript exited with 1
-                Command Line: Rscript -e tempLibDir = '/tmp/Rlib.1235445028691846859';source('/tmp/CNVPlottingLibrary.3580351925111857432.R');source('/tmp/PlotDenoisedCopyRatios.10194504378040907223.R'); --args --sample_name=109_58 --standardized_copy_ratios_file=/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv --denoised_copy_ratios_file=/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv --contig_names=chr1CONTIG_DELIMITERchr2CONTIG_DELIMITERchr3CONTIG_DELIMITERchr4CONTIG_DELIMITERchr5CONTIG_DELIMITERchr6CONTIG_DELIMITERchr7 --contig_lengths=9798893CONTIG_DELIMITER4478683CONTIG_DELIMITER5274802CONTIG_DELIMITER6000761CONTIG_DELIMITER6436246CONTIG_DELIMITER4218384CONTIG_DELIMITER4255303 --maximum_copy_ratio=4.0 --point_size_copy_ratio=0.2 --output_dir=/home/ry00555/Bioinformatics/CrassaGenome/Run109CNV/ --output_prefix=Run109CNV/109_
-                Stdout:
-                Stderr: Error in getopt_options(object, args) :
-                  Error in getopt(spec = spec, opt = args) : long flag "args" is invalid
-                Calls: source ... eval -> parse_args -> parse_options -> getopt_options
-module load R/4.2.1-foss-2020b
-R CMD BATCH CNVPlottingLibrary.R
+
+scp -r ry00555@xfer.gacrc.uga.edu:/home/ry00555/Bioinformatics/CrassaGenome/Run109CNV.denoised.png ~/Downloads
