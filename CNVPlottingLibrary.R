@@ -1,5 +1,5 @@
 #NOTE: the Java wrapper for this script first sources CNVPlottingLibrary.R
-options(error = quote({dump.frames(dumpto = "plotting_dump", to.file = TRUE); q(status = 1)}))    # Useful for debugging
+#options(error = quote({dump.frames(dumpto = "plotting_dump", to.file = TRUE); q(status = 1)}))    # Useful for debugging
 
 install.packages(optparse)
 install.packages(data.table)
@@ -31,7 +31,7 @@ output_prefix = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
 if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)))) {
-    quit(save="no", status=1, runLast=FALSE)
+    print(status=1))
 }
 
 GCF_000182925.2.dict"[,2] = as.list(strsplit(contig_names_string, "CONTIG_DELIMITER")[[1]])

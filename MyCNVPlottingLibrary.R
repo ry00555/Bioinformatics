@@ -5,10 +5,11 @@ install.packages("BiocManager")
 BiocManager::install(version = "3.16")
 install.packages("optparse")
 install.packages("data.table")
+library(BiocManager)
 library(optparse)
 library(data.table)
 
-option_list = list(make_option(c("--sample_name"), dest="109_58", action="store"), 
+option_list = list(make_option(c("--sample_name"), dest="/home/ry00555/Bioinformatics/Run109CNV", action="store"), 
                    make_option(c("--standardized_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv", action="store"), 
                    make_option(c("--denoised_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv", action="store"),
                    make_option(c("--contig_names"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict", action="store"),
