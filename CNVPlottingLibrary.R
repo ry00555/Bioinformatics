@@ -1,89 +1,104 @@
-#NOTE: the Java wrapper for this script first sources CNVPlottingLibrary.R
-#options(error = quote({dump.frames(dumpto = "plotting_dump", to.file = TRUE); q(status = 1)}))    # Useful for debugging
-
-install.packages(optparse)
-install.packages(data.table)
-library(optparse)
-library(data.table)
-
-option_list = list(
-    make_option(c("--sample_name"), dest="109_58", action="store"),
-    make_option(c("--standardized_copy_ratios_file"), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv", action="store"),
-    make_option(c("--denoised_copy_ratios_file), dest="/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv", action="store"),
-    make_option(c("--contig_names"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,2], action="store"),      #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--contig_lengths"), dest="/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,3]", action="store"),  #string with elements separated by "CONTIG_DELIMITER"
-    make_option(c("--maximum_copy_ratio"), dest="maximum_copy_ratio", action="store", type="infinity"),
-    make_option(c("--point_size_copy_ratio"), dest="point_size_copy_ratio", action="store", type="double"),
-    make_option(c("--output_dir"), dest="/Users/rochelleyap/Desktop/LewisLab/Images", action="store"),
-    make_option(c("--output_prefix"), dest="109_", action="store"))
-
-opt = parse_args(OptionParser(option_list=option_list))
-
-sample_name = opt[["109_58"]]
-standardized_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv"]]
-denoised_copy_ratios_file = opt[["/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv"]]
-contig_names = opt[["/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,2]"]]
-contig_lengths = opt[["/home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict"[,3]"]]
-maximum_copy_ratio = opt[["maximum_copy_ratio"]]
-point_size_copy_ratio = opt[["point_size_copy_ratio"]]
-output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
-output_prefix = opt[["109_"]]
-
-#check that input files exist; if not, quit with error code that GATK will pick up
-if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict", /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict")))) {
-    print(status=1))
+ReadTSV = function(tsv_file) {
+    # We need to filter out header lines beginning with '@';
+    # however, the standard 'fread("grep ...")' causes issues with the default Docker container, so we use a temporary file.
+    # See https://github.com/broadinstitute/gatk/issues/4140.
+    temp_file = tempfile()
+    system(sprintf('grep -v ^@ "%s" > %s', tsv_file, temp_file))
+    return(suppressWarnings(fread(temp_file, sep="\t", stringsAsFactors=FALSE, header=TRUE, check.names=FALSE, data.table=FALSE, showProgress=FALSE, verbose=FALSE)))
 }
 
-GCF_000182925.2.dict"[,2] = as.list(strsplit(contig_names_string, "CONTIG_DELIMITER")[[1]])
-GCF_000182925.2.dict"[,3] = as.list(strsplit(contig_lengths_string, "CONTIG_DELIMITER")[[1]])
-contig_ends = cumsum(GCF_000182925.2.dict"[,3])
-contig_starts = c(0, head(contig_ends, -1))
+## Contig Background for data
+SetUpPlot = function(sample_name, y.lab, y.min, y.max, x.lab, contig_names, contig_starts, contig_ends, do_label_contigs) {
+    num_contigs = length(contig_names)
+    contig_centers = (contig_starts + contig_ends) / 2
+    genome_length = contig_ends[num_contigs]
+    suppressWarnings(par(mar=c(3.1, 3.6, 3.6, 0), mgp=c(2, -0.2, -1.1)))
+    plot(0, type="n", bty="n", xlim=c(0, genome_length), ylim=c(0, y.max), xlab="", ylab="", main=sample_name, xaxt="n")
+    mtext(side=1, line=1.5, x.lab, cex=0.75, outer=FALSE)
+    mtext(side=2.2, line=1.5, y.lab, cex=0.75, las=FALSE, outer=FALSE)
 
-CalculateMedianAbsoluteDeviation = function(dat) {
-    return(median(abs(diff(dat))))
-}
+    if (do_label_contigs) {
+        mtext(text=contig_names[1:num_contigs], side=1, line=ifelse(c(1:num_contigs) %% 2 == 1, -0.45, 0.0),
+        at = contig_centers[1:num_contigs], las=1, cex=par("cex.axis") * par("cex") * 0.7)
+    }
 
-#plotting is extracted to a function for debugging purposes
-WriteDenoisingPlots = function(109_58, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv, GCF_000182925.2.dict"[,2], Run109CNV, 109_) {
-    standardized_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv)
-    denoised_copy_ratios_df = ReadTSV(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)
-
-    #transform to linear copy ratio
-    standardized_copy_ratios_df[["COPY_RATIO"]] = 2^standardized_copy_ratios_df[["LOG2_COPY_RATIO"]]
-    denoised_copy_ratios_df[["COPY_RATIO"]] = 2^denoised_copy_ratios_df[["LOG2_COPY_RATIO"]]
-
-    #determine copy-ratio midpoints
-    standardized_copy_ratios_df[["MIDDLE"]] = round((standardized_copy_ratios_df[["START"]] + standardized_copy_ratios_df[["END"]]) / 2)
-    denoised_copy_ratios_df[["MIDDLE"]] = round((denoised_copy_ratios_df[["START"]] + denoised_copy_ratios_df[["END"]]) / 2)
-
-    #write the MAD files
-    standardizedMAD = CalculateMedianAbsoluteDeviation(standardized_copy_ratios_df[["COPY_RATIO"]])
-    denoisedMAD = CalculateMedianAbsoluteDeviation(denoised_copy_ratios_df[["COPY_RATIO"]])
-    write.table(round(standardizedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".standardizedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(denoisedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".denoisedMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round(standardizedMAD - denoisedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".deltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-    write.table(round((standardizedMAD - denoisedMAD) / standardizedMAD, 3), file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".scaledDeltaMAD.txt", sep="")), col.names=FALSE, row.names=FALSE)
-
-    #plot standardized and denoised copy ratio on top of each other
-    pre_color_blue = "#3B5DFF"
-    post_color_green = "#4FC601"
-
-    #plot up to maximum_copy_ratio (or full range, if maximum_copy_ratio = Infinity)
-    denoising_plot_file = file.path("/Users/rochelleyap/Desktop/LewisLab/Images", paste(Run109_, ".denoised.png", sep=""))
-    png(denoising_plot_file, 12, 7, units="in", type="cairo", res=300, bg="white")
-    par(mfrow=c(2, 1), cex=0.75, las=1)
-    maximum_standardized_copy_ratio = if(is.finite(maximum_copy_ratio)) maximum_copy_ratio else 1.05 * max(standardized_copy_ratios_df[["COPY_RATIO"]])
-    SetUpPlot(109_58, "standardized copy ratio", 0, maximum_standardized_copy_ratio, paste("median absolute deviation = ", round(standardizedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, FALSE)
-    PlotCopyRatios(standardized_copy_ratios_df, pre_color_blue, contig_names, contig_starts, point_size_copy_ratio)
-    maximum_denoised_copy_ratio = if(is.finite(maximum_copy_ratio)) maximum_copy_ratio else 1.05 * max(denoised_copy_ratios_df[["COPY_RATIO"]])
-    SetUpPlot(109_58, "denoised copy ratio", 0, maximum_denoised_copy_ratio, paste("median absolute deviation = ", round(denoisedMAD, 3), sep=""), contig_names, contig_starts, contig_ends, TRUE)
-    PlotCopyRatios(denoised_copy_ratios_df, post_color_green, contig_names, contig_starts, point_size_copy_ratio)
-    dev.off()
-
-    #check for created files and quit with error code if not found
-    if (!all(file.exists(c(denoising_plot_file)))) {
-        quit(save="no", status=1, runLast=FALSE)
+    for (i in 1:num_contigs) {
+        use.col = ifelse(i %% 2 == 1, "grey90", "white")
+        rect(xleft=contig_starts[i], ybottom=y.min, xright=contig_ends[i], ytop=y.max, col=use.col, border=NA)
     }
 }
 
-#WriteDenoisingPlots(sample_name, standardized_copy_ratios_file, denoised_copy_ratios_file, contig_names, output_dir, output_prefix)
+PlotCopyRatios = function(copy_ratios_df, color, contig_names, contig_starts, point_size) {
+    genomic_coordinates = contig_starts[match(copy_ratios_df[["CONTIG"]], contig_names)] + copy_ratios_df[["MIDDLE"]]
+    points(x=genomic_coordinates, y=copy_ratios_df[["COPY_RATIO"]], col=color, pch=".", cex=point_size)
+}
+
+PlotCopyRatiosWithModeledSegments = function(denoised_copy_ratios_df, modeled_segments_df, contig_names, contig_starts, point_size=0.2) {
+   points_start_index = 1
+   for (s in 1:nrow(modeled_segments_df)) {
+       #skip segments with no points
+       num_points = modeled_segments_df[s, "NUM_POINTS_COPY_RATIO"]
+       if (num_points == 0) {
+           next
+       }
+       points_end_index = points_start_index + num_points
+
+       contig = modeled_segments_df[s, "CONTIG"]
+       offset = contig_starts[match(contig, contig_names)]
+       segment_start = offset + modeled_segments_df[s, "START"]
+       segment_end = offset + modeled_segments_df[s, "END"]
+       genomic_coordinates = offset + denoised_copy_ratios_df[points_start_index:points_end_index, "MIDDLE"]
+
+       denoised_copy_ratios = denoised_copy_ratios_df[points_start_index:points_end_index, "COPY_RATIO"]
+
+       colors = c("coral", "dodgerblue")
+       points(x=genomic_coordinates, y=denoised_copy_ratios, col=colors[s %% 2 + 1], pch=".", cex=point_size)
+
+       copy_ratio_posterior_10 = 2^modeled_segments_df[s, "LOG2_COPY_RATIO_POSTERIOR_10"]
+       copy_ratio_posterior_50 = 2^modeled_segments_df[s, "LOG2_COPY_RATIO_POSTERIOR_50"]
+       copy_ratio_posterior_90 = 2^modeled_segments_df[s, "LOG2_COPY_RATIO_POSTERIOR_90"]
+       segments(x0=segment_start, y0=copy_ratio_posterior_50, x1=segment_end, y1=copy_ratio_posterior_50, col="black", lwd=2, lty=1)
+       rect(xleft=segment_start, ybottom=copy_ratio_posterior_10, xright=segment_end, ytop=copy_ratio_posterior_90, lwd=1, lty=1)
+
+       points_start_index = points_start_index + num_points
+   }
+}
+
+PlotAlternateAlleleFractionsWithModeledSegments = function(allelic_counts_df, modeled_segments_df, contig_names, contig_starts, point_size=0.4) {
+   points_start_index = 1
+   for (s in 1:nrow(modeled_segments_df)) {
+       #skip segments with no points
+       num_points = modeled_segments_df[s, "NUM_POINTS_ALLELE_FRACTION"]
+       if (num_points == 0) {
+           next
+       }
+       points_end_index = points_start_index + num_points
+
+       contig = modeled_segments_df[s, "CONTIG"]
+       offset = contig_starts[match(contig, contig_names)]
+       segment_start = offset + modeled_segments_df[s, "START"]
+       segment_end = offset + modeled_segments_df[s, "END"]
+       genomic_coordinates = offset + allelic_counts_df[points_start_index:points_end_index, "POSITION"]
+
+       ref_counts = allelic_counts_df[points_start_index:points_end_index, "REF_COUNT"]
+       alt_counts = allelic_counts_df[points_start_index:points_end_index, "ALT_COUNT"]
+       alternate_allele_fractions = alt_counts / (alt_counts + ref_counts)
+
+       colors = c("coral", "dodgerblue")
+       points(x=genomic_coordinates, y=alternate_allele_fractions, col=colors[s %% 2 + 1], pch=".", cex=point_size)
+
+       minor_allele_fraction_posterior_10 = modeled_segments_df[s, "MINOR_ALLELE_FRACTION_POSTERIOR_10"]
+       minor_allele_fraction_posterior_50 = modeled_segments_df[s, "MINOR_ALLELE_FRACTION_POSTERIOR_50"]
+       minor_allele_fraction_posterior_90 = modeled_segments_df[s, "MINOR_ALLELE_FRACTION_POSTERIOR_90"]
+       segments(x0=segment_start, y0=minor_allele_fraction_posterior_50, x1=segment_end, y1=minor_allele_fraction_posterior_50, col="black", lwd=2, lty=1)
+       rect(xleft=segment_start, ybottom=minor_allele_fraction_posterior_10, xright=segment_end, ytop=minor_allele_fraction_posterior_90, lwd=1, lty=1)
+
+       major_allele_fraction_posterior_10 = 1 - minor_allele_fraction_posterior_10
+       major_allele_fraction_posterior_50 = 1 - minor_allele_fraction_posterior_50
+       major_allele_fraction_posterior_90 = 1 - minor_allele_fraction_posterior_90
+       segments(x0=segment_start, y0=major_allele_fraction_posterior_50, x1=segment_end, y1=major_allele_fraction_posterior_50, col="black", lwd=2, lty=1)
+       rect(xleft=segment_start, ybottom=major_allele_fraction_posterior_90, xright=segment_end, ytop=major_allele_fraction_posterior_10, lwd=1, lty=1)
+
+       points_start_index = points_start_index + num_points
+   }
+}
