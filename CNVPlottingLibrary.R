@@ -30,7 +30,7 @@ output_dir = opt[["/Users/rochelleyap/Desktop/LewisLab/Images"]]
 output_prefix = opt[["109_"]]
 
 #check that input files exist; if not, quit with error code that GATK will pick up
-if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv)))) {
+if (!all(file.exists(c(/home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.standardizedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/CopyRatios/109_58.denoisedCR.tsv, /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict", /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.dict")))) {
     print(status=1))
 }
 
