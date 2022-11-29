@@ -45,26 +45,30 @@ gatk PreprocessIntervals \
           --padding 0 \
           -O Crassa.preprocessed_intervals.interval_list
 
-java -jar $EBROOTPICARD/picard.jar ValidateSamFile \
-        I=/scratch/ry00555/OutputRun109/SortedBamFiles/109_58_Genomic.bam \
-        MODE=SUMMARY
-
 java -jar $EBROOTPICARD/picard.jar AddOrReplaceReadGroups \
-      -I /scratch/ry00555/OutputRun109/SortedBamFiles/109_58_Genomic.bam \
-      -O /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_58_Genomic.bamoutput.bam \
-      -RGID 1 \
-      -RGLB lib1 \
-      -RGPL illumina \
-      -RGPU S34 \
-      -RGSM 109_58
+                -I /scratch/ry00555/OutputRun109/SortedBamFiles/109_59_Genomic.bam \
+                -O /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_59_Genomic.bamoutput.bam \
+                -RGID 1 \
+                -RGLB lib1 \
+                -RGPL illumina \
+                -RGPU S34 \
+                -RGSM 109_59
+
+java -jar $EBROOTPICARD/picard.jar ValidateSamFile \
+  -I /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_59_Genomic.bamoutput.bam \
+  -R /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2.fasta
+  MODE=SUMMARY
+
 mkdir Run109ReadGroups
-samtools index /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_58_Genomic.bamoutput.bam
+
+
+samtools index /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_59_Genomic.bamoutput.bam
 
 gatk CollectReadCounts \
-     -I /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_58_Genomic.bamoutput.bam \
+     -I /home/ry00555/Bioinformatics/CrassaGenome/Run109ReadGroups/109_59_Genomic.bamoutput.bam \
      -L Crassa.interval_list \
      --interval-merging-rule OVERLAPPING_ONLY \
-     -O /home/ry00555/Bioinformatics/CrassaGenome/109tsv/109_58.counts.tsv
+     -O /home/ry00555/Bioinformatics/CrassaGenome/109tsv/109_59.counts.tsv
 
 gatk AnnotateIntervals \
           -R GCF_000182925.2.fasta \
@@ -74,22 +78,22 @@ gatk AnnotateIntervals \
 
 mkdir PanelofNormals
 gatk CreateReadCountPanelOfNormals \
-  -I 109tsv/109_58.counts.tsv \
+  -I 109tsv/109_59.counts.tsv \
   --annotated-intervals Crassa_annotated_intervals.tsv \
-  -O PanelofNormals/109_58cnv.pon.hdf5
+  -O PanelofNormals/109_59cnv.pon.hdf5
 
 mkdir CopyRatios
-  gatk DenoiseReadCounts \
-          -I 109tsv/109_58.counts.tsv \
+gatk DenoiseReadCounts \
+          -I 109tsv/109_59.counts.tsv \
           --annotated-intervals Crassa_annotated_intervals.tsv \
-          --count-panel-of-normals PanelofNormals/109_58cnv.pon.hdf5 \
-          --standardized-copy-ratios CopyRatios/109_58.standardizedCR.tsv \
-          --denoised-copy-ratios CopyRatios/109_58.denoisedCR.tsv
+          --count-panel-of-normals PanelofNormals/109_59cnv.pon.hdf5 \
+          --standardized-copy-ratios CopyRatios/109_59.standardizedCR.tsv \
+          --denoised-copy-ratios CopyRatios/109_59.denoisedCR.tsv
 
 gatk PlotDenoisedCopyRatios \
-                --standardized-copy-ratios CrassaGenome/CopyRatios/109_58.standardizedCR.tsv \
-                --denoised-copy-ratios CrassaGenome/CopyRatios/109_58.denoisedCR.tsv \
-                --sequence-dictionary CrassaGenome/GCF_000182925.2.dict \
+                --standardized-copy-ratios CopyRatios/109_59.standardizedCR.tsv \
+                --denoised-copy-ratios CopyRatios/109_59.denoisedCR.tsv \
+                --sequence-dictionary GCF_000182925.2.dict \
                 --output-prefix Run109CNV \
                 --output CrassaGenome
 
