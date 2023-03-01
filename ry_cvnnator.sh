@@ -1,10 +1,34 @@
+#!/bin/bash
+#SBATCH --job-name=j_GATK
+#SBATCH --partition=batch
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=ry00555@uga.edu
+#SBATCH --ntasks=4
+#SBATCH --mem=10gb
+#SBATCH --time=08:00:00
+#SBATCH --output=GATK.%j.out
+#SBATCH --error=GATK.%j.err
+
+d $SLURM_SUBMIT_DIR
+
+#read in variables from the config file ($threads, $FASTQ, $OUTDIR, )
+
+source config.txt
+
+##make output directory
+OUTDIR= "/scratch/ry00555/Bioinformatics/CNVator"
+if [ ! -d $OUTDIR ]
+then
+mkdir -p $OUTDIR
+fi#current version module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
+
 FILE=$1
 SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples'
 REF='/Users/ry00555/Desktop/NeurosporaGenome/GCA_000182925.2_NC12_genomic.fasta'
 #Stop at any error
 set -ue
 #move to CNVnator directory
-cd /home/ry00555/Bioinformatics/CNVnator
+cd /scratch/ry00555/Bioinformatics/CNVator
 #EXTRACTING READ MAPPING FROM BAM/SAM FILES
 nvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_Genomic.bam
 
