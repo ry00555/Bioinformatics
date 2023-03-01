@@ -6,8 +6,8 @@
 #SBATCH --ntasks=4
 #SBATCH --mem=10gb
 #SBATCH --time=08:00:00
-#SBATCH --output=/CNVator/CNVnator.%j.out
-#SBATCH --error=/CNVator/CNVnator.%j.err
+#SBATCH --output=CNVnator.%j.out
+#SBATCH --error=CNVnator.%j.err
 
 cd $SLURM_SUBMIT_DIR
 
