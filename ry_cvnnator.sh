@@ -1,13 +1,12 @@
 FILE=$1
-SbPTH='/Users/ry00555/Desktop/BamFiles'
-REF='/Users/ry00555/Desktop/NeurosporaGenome/GCF_000182925.2.fasta'
-
+SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples'
+REF='/Users/ry00555/Desktop/NeurosporaGenome/GCA_000182925.2_NC12_genomic.fasta'
 #Stop at any error
 set -ue
 #move to CNVnator directory
 cd /home/ry00555/Bioinformatics/CNVnator
 #EXTRACTING READ MAPPING FROM BAM/SAM FILES
-#cnvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_al.sort.bam
+nvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_Genomic.bam
 
  cnvnator -root ${FILE}.root -his 1670 -fasta ${REF}
  cnvnator -root ${FILE}.root -stat 1670
