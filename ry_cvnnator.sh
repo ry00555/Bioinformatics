@@ -6,8 +6,8 @@
 #SBATCH --ntasks=4
 #SBATCH --mem=10gb
 #SBATCH --time=08:00:00
-#SBATCH --output=CNVnator.%j.out
-#SBATCH --error=CNVnator.%j.err
+#SBATCH --output=/CNVator/CNVnator.%j.out
+#SBATCH --error=/CNVator/CNVnator.%j.err
 
 cd $SLURM_SUBMIT_DIR
 
@@ -20,9 +20,11 @@ OUTDIR= "/scratch/ry00555/Bioinformatics/CNVator"
 module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
 
 FILE=$1
-SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples/'
+SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples'
 REF='/Users/ry00555/Desktop/NeurosporaGenome/GCA_000182925.2_NC12_genomic.fasta'
 #Stop at any error
+
+cd /scratch/ry00555/Bioinformatics/CNVator
 set -ue
 #EXTRACTING READ MAPPING FROM BAM/SAM FILES
 cnvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_Genomic.bam
