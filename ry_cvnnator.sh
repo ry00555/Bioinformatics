@@ -9,7 +9,7 @@
 #SBATCH --output=CNVnator.%j.out
 #SBATCH --error=CNVnator.%j.err
 
-d $SLURM_SUBMIT_DIR
+cd $SLURM_SUBMIT_DIR
 
 #read in variables from the config file ($threads, $FASTQ, $OUTDIR, )
 
@@ -27,10 +27,8 @@ SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples
 REF='/Users/ry00555/Desktop/NeurosporaGenome/GCA_000182925.2_NC12_genomic.fasta'
 #Stop at any error
 set -ue
-#move to CNVnator directory
-cd /scratch/ry00555/Bioinformatics/CNVator
 #EXTRACTING READ MAPPING FROM BAM/SAM FILES
-nvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_Genomic.bam
+cnvnator -root ${FILE}.root -tree ${SbPTH}/${FILE}_Genomic.bam
 
  cnvnator -root ${FILE}.root -his 1670 -fasta ${REF}
  cnvnator -root ${FILE}.root -stat 1670
