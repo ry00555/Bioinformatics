@@ -21,7 +21,8 @@ module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
 
 FILE=$1
 SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/Bamfiles'
-REF='/Users/ry00555/Desktop/NeurosporaGenome/Chromsomes/*.fa'
+REF='/Users/ry00555/Desktop/NeurosporaGenome/GCF_000182925.2.fasta'
+-d '/Users/ry00555/Desktop/NeurosporaGenome/Chromsomes/*.fa'
 
 #Stop at any error
 
