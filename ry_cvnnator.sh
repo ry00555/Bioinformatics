@@ -21,7 +21,7 @@ module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
 
 FILE=$1
 SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples'
-REF='/Users/ry00555/Desktop/NeurosporaGenome/GCA_000182925.2_NC12_genomic.fasta'
+REF='/Users/ry00555/Desktop/NeurosporaGenome/GCF_000182925.2.fasta'
 #Stop at any error
 
 cd /scratch/ry00555/Bioinformatics/CNVator
