@@ -6,21 +6,21 @@
 #SBATCH --ntasks=4
 #SBATCH --mem=10gb
 #SBATCH --time=08:00:00
-#SBATCH --output=GATK.%j.out
-#SBATCH --error=GATK.%j.err
+#SBATCH --output=CNVnator.%j.out
+#SBATCH --error=CNVnator.%j.err
 
 d $SLURM_SUBMIT_DIR
 
 #read in variables from the config file ($threads, $FASTQ, $OUTDIR, )
 
-source config.txt
 
 ##make output directory
 OUTDIR= "/scratch/ry00555/Bioinformatics/CNVator"
 if [ ! -d $OUTDIR ]
 then
 mkdir -p $OUTDIR
-fi#current version module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
+fi
+module spider CNVnator/0.4.1-foss-2019b-ROOT-6.14.06
 
 FILE=$1
 SbPTH='/Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples'
