@@ -29,7 +29,7 @@ CHROM='/Users/ry00555/Desktop/NeurosporaGenome/Chromsomes/*.fa'
 cd /scratch/ry00555/Bioinformatics/CNVator
 set -ue
 #EXTRACTING READ MAPPING FROM BAM/SAM FILES
-cnvnator -root ${FILE}.root -chrom $CHROM -tree ${SbPTH}/${FILE}.bam
+cnvnator -root ${FILE}.root -chrom $CHROM -tree ${SbPTH}/${FILE}*.bam
 
   cnvnator -root ${FILE}.root -chrom $CHROM -his 1670 -fasta ${REF}
   cnvnator -root ${FILE}.root -chrom $CHROM -stat 1670
