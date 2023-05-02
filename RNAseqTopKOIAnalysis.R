@@ -87,13 +87,16 @@ KOoIMetaRowIDsnoWT =c("0.17%arginine", "NCU00202A", "NCU00269 NCU07496 NCO00119"
                       "NCU03481A", "NCU03875", "NCU04017", "NCU04198A", "NCU04737","NCU05300A",  "NCU05460a", "NCU05460A",
                       "NCU06679", "NCU06787A", "NCU06788a", "NCU06788A", "NCU07496", "NCU08357", "NCU09120",
                       'NCU09825A')
-KOoIMeta$Condition <- factor(KOoIMeta$Condition)
-KOoIMeta$Type <- factor(KOoIMeta$Type)
+
 
 
 KOoIdds2 <- DESeqDataSetFromMatrix(countData = KOoIShortened,
                                    colData = KOoIMeta,
                                    design = ~ Type)
+
+KOoIMeta$Condition <- factor(KOoIMeta$Condition)
+KOoIMeta$Type <- factor(KOoIMeta$Type)
+
 KOoIdds2$Type <- relevel(KOoIdds2$Type, ref = "Wildtype")
 KOoIdds2 <- DESeq(KOoIdds2)
 plotDispEsts(KOoIdds2)
