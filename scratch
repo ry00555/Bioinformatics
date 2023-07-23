@@ -1,0 +1,11 @@
+scp /Users/ry00555/Desktop/RochelleLabDesktopData/IGV/mus30xmei3/mus30Samples/109* ry00555@xfer.gacrc.uga.edu:/scratch/ry00555/GATKRun109/
+ml BWA/0.7.17-GCC-8.3.0
+
+bwa index GCF_000182925.2.fasta
+
+#curl ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/182/925/GCF_000182925.2_NC12/GCF_000182925.2_NC12_genomic.fna.gz | gunzip -c > /home/ry00555/Bioinformatics/CrassaGenome/GCF_000182925.2_NC12_genomic.fna
+
+#Converts the GFF file to BED format
+samtools faidx GCF_000182925.2.fasta
+bowtie2-build GCF_000182925.2.fasta reference
+bowtie2 -x  reference -U GCF_000182925.2.fasta -S Crassa.sam
